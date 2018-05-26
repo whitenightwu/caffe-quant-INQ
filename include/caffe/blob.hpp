@@ -231,7 +231,7 @@ class Blob {
   Dtype* mutable_cpu_mask();
   Dtype* mutable_gpu_mask();
   void Update();
-  void FromProto(const BlobProto& proto, bool reshape = true, bool is_quantization=false);
+  void FromProto(const BlobProto& proto, bool reshape = true, bool is_quantization=false, bool is_shiftcnn=false);
   void ToProto(BlobProto* proto, bool write_diff = false) const;
 
   /// @brief Compute the sum of absolute values (L1 norm) of the data.

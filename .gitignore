@@ -1,0 +1,8 @@
+*.pyc
+*.solverstate
+*.caffemodel
+*log*
+.build_release/*
+Imagenet/*
+examples/INQ/resnet-18/*
+TAGS

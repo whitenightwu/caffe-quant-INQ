@@ -19,5 +19,8 @@ double weightCluster(Dtype weight,int M);
 
 template <typename  Dtype>
 double weightCluster_zero(Dtype weight,int M);
+
+template <typename Dtype>
+double shift_quantization(Dtype weight);
 }
 #endif

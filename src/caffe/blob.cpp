@@ -1,5 +1,6 @@
 #include <climits>
 #include <vector>
+#include <iostream>
 
 #include "caffe/blob.hpp"
 #include "caffe/common.hpp"
@@ -477,7 +478,7 @@ void Blob<Dtype>::CopyFrom(const Blob& source, bool copy_diff, bool reshape) {
 
 // Add mask and quantizate float into power-of-two
 template <typename Dtype>
-void Blob<Dtype>::FromProto(const BlobProto& proto, bool reshape, bool is_quantization) {
+void Blob<Dtype>::FromProto(const BlobProto& proto, bool reshape, bool is_quantization, bool is_shiftcnn) {
   if (reshape) {
     vector<int> shape;
     if (proto.has_num() || proto.has_channels() ||
@@ -529,17 +530,55 @@ void Blob<Dtype>::FromProto(const BlobProto& proto, bool reshape, bool is_quanti
     int n1=(int)floor(log2(max_data*4.0/3.0));
     
     //quantizate the top 30% of each layer, change the "partition" until partition=0
-    int partition=int(count_*0.7)-1;
+    int partition=int(count_*0.5)-1;
+    //    double xxx =0;
+    double q1=0;
+    double q2=0;
+    if(is_shiftcnn == true)
+      {
+	//shiftCNN
+	/*
+	std::cout << "is_shiftcnn++++++" << std::endl;
+	for (int i = 0; i < (count_); ++i)
+	  {
+	    if(std::abs(data_vec[i])>=data_copy[partition])
+	      {	    
+		data_vec[i] = data_vec[i]/max_data;
+		data_vec[i] = shift_quantization(data_vec[i]);	 
+		mask_vec[i]=0;
+		xxx = data_vec[i];
+	      }
+	    if(i < 100)
+	      std::cout << xxx << std::endl;
+	  }
+	*/
+	//2N-INQ
+	std::cout << "=====2N-INQ" << std::endl;
+	for (int i = 0; i < (count_); ++i)
+	  {
+	    if(std::abs(data_vec[i])>=data_copy[partition])
+	      {	    
+		q1 = weightCluster_zero(data_vec[i],n1);
+		q2 = weightCluster_zero(data_vec[i]-q1,n1-1);
+		data_vec[i] = q1 + q2;
+		mask_vec[i]=0;
+	      }
+	  }
 
-    for (int i = 0; i < (count_); ++i) {
-    
-      if(std::abs(data_vec[i])>=data_copy[partition])
-        {
-          data_vec[i] = weightCluster_zero(data_vec[i],n1);
-	  
-          mask_vec[i]=0;
-        }
-    }
+      }
+    else
+      {
+	//INQ
+	std::cout << "=====INQ" << std::endl;
+	for (int i = 0; i < (count_); ++i)
+	  {
+	    if(std::abs(data_vec[i])>=data_copy[partition])
+	      {	    
+		data_vec[i] = weightCluster_zero(data_vec[i],n1);	 
+		mask_vec[i]=0;
+	      }
+	  }
+      }
   }
   
   if (proto.double_diff_size() > 0) {

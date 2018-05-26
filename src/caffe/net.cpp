@@ -765,11 +765,19 @@ void Net<Dtype>::CopyTrainedLayersFrom(const NetParameter& param) {
 	      is_quantization=true;
       else
 	      is_quantization=false;
-	
+
+      //shiftCNN
+      bool is_shiftcnn=false;
+      if(source_layer.name() == "fc7")
+	is_shiftcnn=false;
+      //is_shiftcnn=true;
+      else
+	is_shiftcnn=false;
+
       if (!target_blobs[j]->ShapeEquals(source_layer.blobs(j))) {
         Blob<Dtype> source_blob;
         const bool kReshape = true;
-        source_blob.FromProto(source_layer.blobs(j), kReshape,is_quantization);
+        source_blob.FromProto(source_layer.blobs(j), kReshape,is_quantization, is_shiftcnn);
         LOG(FATAL) << "Cannot copy param " << j << " weights from layer '"
             << source_layer_name << "'; shape mismatch.  Source param shape is "
             << source_blob.shape_string() << "; target param shape is "
@@ -778,7 +786,7 @@ void Net<Dtype>::CopyTrainedLayersFrom(const NetParameter& param) {
             << "copying from a saved net, rename the layer.";
       }
       const bool kReshape = false;
-      target_blobs[j]->FromProto(source_layer.blobs(j), kReshape,is_quantization);
+      target_blobs[j]->FromProto(source_layer.blobs(j), kReshape,is_quantization, is_shiftcnn);
     }
   }
 }
