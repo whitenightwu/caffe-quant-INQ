@@ -1,0 +1,6 @@
+*.pyc
+*.solverstate
+*.caffemodel
+*log*
+.build_release/*
+Imagenet/*

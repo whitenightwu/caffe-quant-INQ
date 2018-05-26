@@ -1,5 +1,6 @@
 #include <climits>
 #include <vector>
+#include <iostream>
 
 #include "caffe/blob.hpp"
 #include "caffe/common.hpp"
@@ -527,10 +528,11 @@ void Blob<Dtype>::FromProto(const BlobProto& proto, bool reshape, bool is_quanti
     //caculate the n1
     Dtype max_data=data_copy[count_-1];
     int n1=(int)floor(log2(max_data*4.0/3.0));
-    
-    //quantizate the top 30% of each layer, change the "partition" until partition=0
-    int partition=int(count_*0.7)-1;
-
+    int xx1 = int(0.2*count_)-1;
+    //quantizate the top 20% of each layer, change the "partition" until partition=0
+    int partition=int(count_*0.8)-1;
+    // std::cout << pow(2,n1-3) << "==============  " << pow(2,n1) << std::endl;
+    std::cout << "weight before Q: " << data_copy[xx1] << "~" << data_copy[partition] << std::endl;
     for (int i = 0; i < (count_); ++i) {
     
       if(std::abs(data_vec[i])>=data_copy[partition])

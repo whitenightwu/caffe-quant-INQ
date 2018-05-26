@@ -15,8 +15,8 @@ namespace caffe
       min=std::abs(weight);
       flag=0.0;
     }
-          
-    for(int i=(M-7);i<=M;i++)
+    //b=5     for(int i=(M-7);i<=M;i++)          
+    for(int i=(M-3);i<=M;i++)
       {
         if(min>std::abs(weight-pow(2,i)))
           {
@@ -45,8 +45,9 @@ namespace caffe
       min=std::abs(weight);
       flag=0.0;
     }
-          
-    for(int i=(M-7);i<=M;i++)
+
+    for(int i=(M-3);i<=M;i++)          
+    //    for(int i=(M-7);i<=M;i++)
       {
         if(min>std::abs(weight-pow(2,i)))
           {
