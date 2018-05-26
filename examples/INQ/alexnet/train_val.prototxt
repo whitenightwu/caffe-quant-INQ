@@ -10,12 +10,12 @@ layer {
   transform_param {
     mirror: true
     crop_size: 227
-    mean_file: "/Path/ILSVRC12_mean.binaryproto"
+    mean_file: "/home/ydwu/database/imagenet/ilsvrc12/imagenet_mean.binaryproto"
   }
   data_param {
-   source: "/Path/imagenet_train_leveldb/"
+   source: "/home/ydwu/database/imagenet/ilsvrc12/lmdb_resize/ilsvrc12_train_lmdb"
     batch_size: 256
-    backend: LEVELDB
+    backend: LMDB
   }
 }
 layer {
@@ -29,12 +29,12 @@ layer {
   transform_param {
     mirror: false
     crop_size: 227
-    mean_file: "Path/ILSVRC12_mean.binaryproto"
+    mean_file: "/home/ydwu/database/imagenet/ilsvrc12/imagenet_mean.binaryproto"
   }
   data_param {
-    source: "/Path/imagenet_val_leveldb/"
+    source: "/home/ydwu/database/imagenet/ilsvrc12/lmdb_resize/ilsvrc12_val_lmdb"
     batch_size: 50
-    backend: LEVELDB
+    backend: LMDB
   }
 }
 layer {

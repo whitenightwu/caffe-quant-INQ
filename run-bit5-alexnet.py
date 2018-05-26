@@ -1,5 +1,6 @@
 import os
 
+#0.7 0.4 0.2 0.0
 
 print "First partition and run"
 
@@ -35,3 +36,9 @@ os.system("sed -i \"s/max_iter: 63000/max_iter: 1/g\" ./examples/INQ/alexnet/sol
 os.system("nohup sh ./examples/INQ/alexnet/train_alexnet.sh >run4_log.out 2>&1")
 
 print "All quantization done and you can enjoy the power-of-two weights using check.py!"
+os.system("sed -i \"s/(count_\*0.)/(count_\*0.7)/g\" ./src/caffe/blob.cpp")
+os.system("make all -j128")
+os.system("sed -i \"s/alexnet_part3_iter_63000.caffemodel/original.caffemodel/g\" ./examples/INQ/alexnet/train_alexnet.sh")
+os.system("sed -i \"s/part4/part1/g\" ./examples/INQ/alexnet/solver.prototxt")
+os.system("sed -i \"s/snapshot: 1/snapshot: 3000/g\" ./examples/INQ/alexnet/solver.prototxt")
+os.system("sed -i \"s/max_iter: 1/max_iter: 63000/g\" ./examples/INQ/alexnet/solver.prototxt")
